@@ -1,7 +1,7 @@
 ---
 title: "Thesis progress"
 author: "WJ Bakker"
-date: "2024-06-05"
+date: "`r Sys.Date()`"
 output: 
   html_document:
     toc: true
@@ -10,7 +10,7 @@ output:
 
 
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, include = FALSE}
 
 library(glmnet)
 library(tidyverse)
@@ -24,134 +24,33 @@ library(stargazer)
 
 # Introduction
 
-### Data
-In this paper, I would like to analyse which factors influence voter behaviour, motivated by the changing political spectrum in Europe. For this, the Comparative Study of Electoral System (CSES) can be helpful. From their website, "The Comparative Study of Electoral Systems (CSES) is a collaborative program of research among election study teams from around the world. Participating countries and provinces include a common module of survey questions in their post-election studies. The resulting data are deposited along with voting, demographic, district and macro/electoral system variables. The studies are then merged into a single, free, public dataset for use in comparative study and cross-level analysis." (see: https://cses.org/about-the-study/)
+### General summary of what I plan to do (so far)
 
-The data are collected by performing surveys after elections in countries worldwide, but I want to narrow this down to Europe, or the European Union. The data contain demographic variables (e.g. gender, age, education level, household income, ethnicity, etc.) and survey level variables (e.g. voted for a left, middle, right party; opinion on the state of the economy, satisfaction with democracy, etc.). Demographic variables are of particular interest since they provide the most validity in measurement and are easiest to interpret. However, this depends on prior research as well, since I might have to narrow my variable selection down based on a specific area of research (if necessary).
+In this paper, I would like to develop methods for applying panel data techniques to survey data. Panel data concern repeated measurements for multiple cross-sectional units over time. However, in many cases true panel data are not available. For example, panel data methods are effective in analysing labour mobility to the end of improving public policies, but data are generally not available for the same workers over time (Ribas, 2022). However, survey data may be available, where representative samples for each cross-sectional unit are observed at each timepoint. In order to leverage the methods for panel data analysis, this dimension ought to be reduced to obtain single measurements for each timepoint. 
 
-### Analysis
+[Deaton (1985)](https://www.princeton.edu/~deaton/downloads/Panel_Data_from_Time_Series_of_Cross_Sections.pdf) first proposes methods to construct these pseudo-panel data by taking population averages. However, this method only works if the survey is a representative sample from the population, which can be an overly strong assumption. Sampling bias is one potential issue. One source of sampling bias is the result of missing values, which leads to dropped observations. Moreover, sampling bias can occur in the data collection when some sub-populations have a larger tendency to respond to the survey. The means, then, will not estimate the population average, lead to an unrepresentative pseudo-panel dataset and ultimately to incorrect inference. 
 
-With the model from [Su, Shi, & Phillips](https://doi-org.vu-nl.idm.oclc.org/10.3982/ECTA12560) in mind, and considering they used a regression with logit link as an example, I thought it would be interesting to regress left-right vote on the available variables. As they describe in their paper, regressions can be performed on multiple levels: 
+To solve this, one would need data on the distribution of the relevant sub-populations. If we assume that there is no sampling bias in the data collection, one can use the sub-population distributions of the full dataset and then use them to correct for the bias in the cleaned data. To correct for both sources of sampling bias one could use publicly available information of sub-population distributions, with the downside that it is time-consuming for a large number of cross-sectional units. 
 
-- Including country-specific intercepts but with equal coefficients for each country
-- Unique coefficients for each country
-- Unique coefficients for each group of countries
+With knowledge of the sub-population distributions the bias can be corrected. Two methods will be compared: using a weighted average (instead of the unweighted average as used by Deaton (1985)), and using stratified bootstrapping (NOTE: I will have to research whether stratified bootstrapping provides any advantages; it provides a distribution of the mean instead of a point estimate, but I'm not sure whether this is relevant for a pseudo-panel analysis).
 
-Where the last option is of course the latent group structure that is proposed in their paper. 
+The research is motivated by the CSES dataset. From their website, "The Comparative Study of Electoral Systems (CSES) is a collaborative program of research among election study teams from around the world. Participating countries and provinces include a common module of survey questions in their post-election studies. The resulting data are deposited along with voting, demographic, district and macro/electoral system variables. The studies are then merged into a single, free, public dataset for use in comparative study and cross-level analysis." (see: https://cses.org/about-the-study/)
 
+To this end, I will first perform a simulation study, generating data that reflect the CSES survey data. Then, I will construct a pseudo-panel dataset using the aforementioned methods and perform a panel data analysis, and see whether the outcome reflects the DGP of the simulated data. The requirements for the data used for the pseudo-panel data analysis will be analysed by simulating data with varying characteristics. 
 
+## Comments on the introduction
 
-### Literature
+We previously discussed the model from [Su, Shi, & Phillips](https://doi-org.vu-nl.idm.oclc.org/10.3982/ECTA12560). It can still be interesting to apply and use it as a sub-research question, but it feels like then the scope of my thesis might become a little too big. This is still something that I consider of course, since I think that there is reason to believe that the assumption of slope homogeneity might be too strong. 
 
-Although much speculation exists about why people vote for a left- or a right-wing party, it seems hard to find papers that directly analyse this. [One paper](https://doi-org.vu-nl.idm.oclc.org/10.1016/j.electstud.2016.02.001) finds that "income inequality has different effects on the support for radical right-wing parties between different income groups". Scanning the [articles that used the CSES dataset](https://cses.org/results/full-bibliography/), it seems like they generally narrow it down to specific variables and perform a more theory-driven approach. However, since this is an econometrics thesis I would prefer to focus on the methodology. 
+Moreover, I am of course aware that a panel data model should model some underlying characteristic of the data. Although left-right vote could still be interesting, I don't think this is suitable for the methods I described above, and there might be a better method to answer my question: factors that determine the political developments in Europe. 
+This is my idea currently:
 
+- data are available for the percentage of votes each party obtained
+- data are available for the left-rightness of each party's manifesto (using the CMP data)
 
-### Considerations
+Using this I can calculate the left-rightness of a country: mean(% votes * left-rightness), which is essentially the mean of the weighted left-rightness of each party. I can then still use the other data that are collected in the CSES as independent variables. I am still a bit unsure on how I would work this out though.
 
-I find it difficult to narrow the topic down sufficiently. Below I will summarize a few problems I ran into that would relate to the introduction section.
-
-#### Relevance/motivation
-
-When I found the dataset, I considered it would be interesting to analyse which factors influence whether people vote for a left or right party. However, this was mostly motivated by wanting to implement the model from Su et al. in a novel way, and of course personal interest. Looking at the literature, it does not seem like there are many papers that analyse this so broadly, which has also made me wonder what the scientific relevance would be of such an analysis. One consideration is that I approach from a more methodological perspective  (e.g., I attempt to use a method for panel data analysis that has not been applied to a specific field yet), but that doesn't really feel sufficient. 
-
-One option is that I find a paper that proposes a theoretical mechanism, e.g., the relationship between "opinion of the state of the economy/satisfaction with democracy" and voting for a populist party (see: [Zasloze et al., 2020](https://doi-org.vu-nl.idm.oclc.org/10.1080/01402382.2020.1776490)).
-
-A more methodological approach could be to fit the three types of models I described, and see if using the model from Su et al. performs better (provides better fit to the data, etc.), which could point towards the efficacy of using latent group structures when analysing political panel data. This could be of interest for further research using the CSES data, and international panel data in general. However, I'm not sure whether this is feasible and whether I could conclude this from applying the model to the available data.
-
-Populism is a popular topic in the politicological literature, and there are ways to analyse populist parties specifically, e.g. by one-hot-encoding voting for a populist party. This would mean that the dataset would become unbalanced in the sense that there are many more 0s (not voting for populist party) than 1s. This is also more involved, both in terms of coding and in terms of literature research. Specifically this would entail right-wing populist parties and the demography of their voters. This could be of particular interest if 'swing elections' are analysed, where populist parties suddenly gained a majority vote, but then the timeperiods would not correspond. Another option could be to look at the last elections before and after the financial crisis. Data should be available for this.
-
-#### Research question
-
-Related to the previous part, I am struggling to find the right angle for formulating a proper research question, also because I am not sure what the specific requirements are for an Econometrics master's thesis, so I think this would be the most important topic to discuss. 
-
-
-#### Panel data
-
-Generally, a panel data analysis involves longitudinal data. In the case of the CSES data, we have observations for multiple timeperiods, but also multiple observations per timeperiod, which adds an extra dimension. Moreover, since the timeperiods correspond to the election years for each country, they don't correspond between countries; elections are held in different years in each country. I am unsure how I could restructure the data to make it suitable for a panel data analysis.
-
-My thoughts currently: 
-
-- Aggregate the data for each country, so we obtain a single observation per election (year) per country, per variable. I don't consider this to be a good option, since T will be small (<6) and we lose many observations. 
-- Subset a specific country (Nederland), and choose an entity (panel) other than Country. I have thought about it, but I couldn't think of a good way to approach this. There are variables for which party someone voted for, and whether they were largest, second largest, etc. There could be something interesting here, but I haven't been able to come up with anything.
-- A different kind of panel data analysis, where T does not correspond to time but to all observations in a country. I'm thinking that observations in a panel do not necessarily have to be longitudinal, but then I am having difficulty interpreting what would be analysed then. One interpretation, is determining whether demographic factors influence voting behaviour differently between countries. The Su et al. model could then shed light on whether there are groups of countries where these effects are similar (equal). 
-  - Year can still be included in a model like this, but I'm unsure about the validity of the model specification at this point, and I'm hoping you'll be able to shed some light on this.
-- Related to the previous point, it could be of interest to subset two specific elections for each country: the last election before the 2008 financial crisis, and the first election after the financial crisis. However, the problems described above remain, namely not having a 'basic' panel dataset with T observations for N units.
-
-
-# Methods
-
-Below I will summarise the results I have obtained so far. On our 03/06 meeting I mentioned the data only continue till 2010. The CSES dataset consists of 5 modules, spanning from 1996 till 2021. These data are merged into the Integrated Module Dataset (IMD). However, upon reviewing the CSES website I found in the errata that some key variables from the last modules hadn't been merged into the IMD yet. I can do this myself, but since the column names don't match I am still working on this. 
-
-### The Netherlands
-
-
-```{r}
-
-source("functions.R")
-cses = read.csv("../cses_IMD2X_IMD3X.csv")
-
-
-
-nl = country_pipeline(cses, "Netherlands")
-
-nl$IMD2002 = as.factor(nl$IMD2002)
-
-nl$year_factor = as.factor(nl$year)
-
-```
-
-
-First I performed an analysis on Dutch data only, where lr_pos indicates whether someone voted for a left (0) or a right (1) party. IMD2006 = household income quintile, IMD2003 = education level, IMD2002 = gender. Before analysing the data are preprocessed. Considering that there are some variables of particular interest, income and education, I remove all rows where these variables are NA. Moreover, I remove variables which contain over 10% NA. With `r nrow(nl)` observations for the Netherlands there are sufficient data to perform a decent analysis. The data seem to be evenly distributed over categories as well. 
-
-
-```{r}
-
-cols = c("lr_pos", "IMD2006", "IMD2003", "IMD2002")
-sapply(nl[,cols], table)
-
-```
-Initial basic model, with variables that I considered interesting based on a paper,
-
-```{r}
-
-# lr_pos ~ income + education + gender
-
-lm1 = glm(lr_pos ~ IMD2006 + IMD2003 + IMD2002 , family = binomial, data = nl)
-summary(lm1)
-
-```
-
-
-Upon further investigation there might be a mediating relationship; including an interaction effect between education and gender:
-
-```{r}
-
-# lr_pos ~ income + education * gender
-
-lm1 = glm(lr_pos ~ 0 + IMD2006 + IMD2003 * IMD2002 , family = binomial, data = nl)
-summary(lm1)
-
-```
-
-However, this is just all the data grouped together, ignoring the effect of time. Time does require a specific interpretation, since we are using a subset of the population under analysis. We might be able to conclude something about how the interaction between the variables changes over time. However, we can't say left/right became bigger/smaller over the years since this isn't reflected in the data. 
-
-```{r}
-
-lm1 = glm(lr_pos ~ IMD2006 + IMD2003 + IMD2002  + year, family = binomial, data = nl)
-summary(lm1)
-
-```
-
-Next, I want to analyse all the countries combined. This is more difficult, since the data cleaning process involves some specific code that might not readily generalise to all countries, which I have to further investigate. 
-
-
-
-
-```{r}
-# data = all_country_pipeline(cses)
-
-```
-
+Alternatively, I could still use the left-right vote of each individual, and if I can assume that the sample is representative, taking the mean (even though it is a categorical variable) should still be valid.
 
 
 
