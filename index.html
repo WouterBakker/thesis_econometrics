@@ -11,7 +11,7 @@
 
 <meta name="author" content="WJ Bakker" />
 
-<meta name="date" content="2024-06-17" />
+<meta name="date" content="2024-06-20" />
 
 <title>Thesis progress</title>
 
@@ -352,7 +352,7 @@ display: none;
 
 <h1 class="title toc-ignore">Thesis progress</h1>
 <h4 class="author">WJ Bakker</h4>
-<h4 class="date">2024-06-17</h4>
+<h4 class="date">2024-06-20</h4>
 
 </div>
 
@@ -362,9 +362,12 @@ display: none;
 <ul>
 <li><a href="#general-summary-of-what-i-plan-to-do-so-far" id="toc-general-summary-of-what-i-plan-to-do-so-far">General summary of
 what I plan to do (so far)</a></li>
+<li><a href="#ideas-for-analysis" id="toc-ideas-for-analysis">Ideas for
+analysis</a></li>
 <li><a href="#comments-on-the-introduction" id="toc-comments-on-the-introduction">Comments on the
 introduction</a></li>
 </ul></li>
+<li><a href="#methods" id="toc-methods">Methods</a></li>
 </ul>
 </div>
 
@@ -426,6 +429,39 @@ data. The requirements for the data used for the pseudo-panel data
 analysis will be analysed by simulating data with varying
 characteristics.</p>
 </div>
+<div id="ideas-for-analysis" class="section level2">
+<h2>Ideas for analysis</h2>
+<ul>
+<li><strong>Democratic Satisfaction</strong>
+<ul>
+<li><strong>Variable</strong>: Satisfaction with the way democracy works
+in the respondent’s country.</li>
+<li><strong>Interest</strong>: Exploring the factors that influence
+democratic satisfaction and how it impacts electoral behavior.</li>
+</ul></li>
+<li><strong>Policy Preferences</strong>
+<ul>
+<li><strong>Variable</strong>: Preferences for specific policies (e.g.,
+economic policies, social policies, immigration policies).</li>
+<li><strong>Interest</strong>: Analyzing the relationship between policy
+preferences and voting behavior or party support.</li>
+</ul></li>
+<li><strong>Economic Perceptions</strong>
+<ul>
+<li><strong>Variable</strong>: Perception of the national or personal
+economic situation.</li>
+<li><strong>Interest</strong>: Studying how economic perceptions
+influence voting behavior and political attitudes.</li>
+</ul></li>
+<li><strong>Political Trust</strong>
+<ul>
+<li><strong>Variable</strong>: Level of trust in political institutions
+(e.g., trust in government, parliament, or judiciary).</li>
+<li><strong>Interest</strong>: Examining the determinants of political
+trust and how it varies across countries and over time.</li>
+</ul></li>
+</ul>
+</div>
 <div id="comments-on-the-introduction" class="section level2">
 <h2>Comments on the introduction</h2>
 <p>We previously discussed the model from <a href="https://doi-org.vu-nl.idm.oclc.org/10.3982/ECTA12560">Su, Shi,
@@ -455,7 +491,79 @@ unsure on how I would work this out though.</p>
 individual, and if I can assume that the sample is representative,
 taking the mean (even though it is a categorical variable) should still
 be valid.</p>
+<p>Another option: only analyse the Netherlands, use parties as
+cross-sectional units (like we discussed in meeting 1). This has several
+benefits, most notably the matching time indices. I can then use one of
+the ideas for analysis for panel data analysis, although I will have to
+work out the variables more thoroughly.</p>
 </div>
+</div>
+<div id="methods" class="section level1">
+<h1>Methods</h1>
+<p>First we perform a simulation study. Two problems for survey data are
+notable: missingness and non-representativeness, factors which also
+mutually influence each other. First we generate a full population, from
+which we sample using stratified sampling, a common sampling technique.
+Stratas are mutually exclusive cohorts, such as gender, birthyear, etc.
+When sampling is performed properly, several techniques can be applied,
+which will be compared. Standard statistical techniques can be applied
+and will result in unbiased estimators when a few key assumptions are
+met:</p>
+<ul>
+<li>There are no missing data
+<ul>
+<li>Or, if there are missing data, they are Missing At Random (MAR)</li>
+</ul></li>
+<li>The data for each strata are normally distributed
+<ul>
+<li>Or, if the data are not normally distributed, sufficient samples are
+taken for the CLT to hold</li>
+</ul></li>
+</ul>
+<p>To this end, we first show that the true population parameters can be
+estimated using representative subsamples when these three conditions
+hold. Then, the conditions will be varied. The most basic statistical
+technique that is relevant for surveys is estimating the population
+mean. For the application of pseudo-panel methods this is essential,
+since the population mean is the most straightforward way to construct a
+pseudo panel.</p>
+<p>An alternative method to construct pseudo panel data is by using
+regression techniques. Here, in addition to the no missing data
+assumption, additional assumptions apply. (TODO: need to read the papers
+and see what they say.)</p>
+<p>First, we deal with the assumption of missing data. One problem
+occurs when missing data are Not Missing At Random (NMAR). For example,
+some cohorts might be more prone to non-response for certain questions,
+for example questions regarding religion, political opinions when their
+opinions are deemed controversial, etc. Applying methods directly to
+these data will lead to biased estimators. One possible solution is
+imputation: filling the missing values using estimation procedures.
+Another solution is balancing: weighting the underrepresented cohorts
+more heavily.</p>
+<p>Another possible problem is non-normality in the data. First, the
+goal is to determine the effect of non-normality under different
+conditions: no missing data, MAR, NMAR. Additionally, the minimum sample
+size at which missingness is no longer a problem can be determined.</p>
+<ul>
+<li><strong>Problem:</strong> Missing data are NMAR
+<ul>
+<li><strong>Solutions:</strong>
+<ul>
+<li>Imputation</li>
+<li>Balancing</li>
+</ul></li>
+</ul></li>
+<li><strong>Problem:</strong> Data are not normally distributed
+<ul>
+<li><strong>Solutions:</strong>
+<ul>
+<li>Bootstrapping</li>
+<li>Model the population mean with techniques that are robust to
+non-normality (TODO: this should be possible, need to research this
+further)</li>
+</ul></li>
+</ul></li>
+</ul>
 </div>
 
 

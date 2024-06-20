@@ -38,6 +38,28 @@ The research is motivated by the CSES dataset. From their website, "The Comparat
 
 To this end, I will first perform a simulation study, generating data that reflect the CSES survey data. Then, I will construct a pseudo-panel dataset using the aforementioned methods and perform a panel data analysis, and see whether the outcome reflects the DGP of the simulated data. The requirements for the data used for the pseudo-panel data analysis will be analysed by simulating data with varying characteristics. 
 
+
+## Ideas for analysis
+
+- **Democratic Satisfaction**
+  - **Variable**: Satisfaction with the way democracy works in the respondent's country.
+  - **Interest**: Exploring the factors that influence democratic satisfaction and how it impacts electoral behavior.
+
+- **Policy Preferences**
+  - **Variable**: Preferences for specific policies (e.g., economic policies, social policies, immigration policies).
+  - **Interest**: Analyzing the relationship between policy preferences and voting behavior or party support.
+
+- **Economic Perceptions**
+  - **Variable**: Perception of the national or personal economic situation.
+  - **Interest**: Studying how economic perceptions influence voting behavior and political attitudes.
+
+- **Political Trust**
+  - **Variable**: Level of trust in political institutions (e.g., trust in government, parliament, or judiciary).
+  - **Interest**: Examining the determinants of political trust and how it varies across countries and over time.
+
+
+
+
 ## Comments on the introduction
 
 We previously discussed the model from [Su, Shi, & Phillips](https://doi-org.vu-nl.idm.oclc.org/10.3982/ECTA12560). It can still be interesting to apply and use it as a sub-research question, but it feels like then the scope of my thesis might become a little too big. This is still something that I consider of course, since I think that there is reason to believe that the assumption of slope homogeneity might be too strong. 
@@ -51,6 +73,38 @@ This is my idea currently:
 Using this I can calculate the left-rightness of a country: mean(% votes * left-rightness), which is essentially the mean of the weighted left-rightness of each party. I can then still use the other data that are collected in the CSES as independent variables. I am still a bit unsure on how I would work this out though.
 
 Alternatively, I could still use the left-right vote of each individual, and if I can assume that the sample is representative, taking the mean (even though it is a categorical variable) should still be valid.
+
+ 
+Another option: only analyse the Netherlands, use parties as cross-sectional units (like we discussed in meeting 1). This has several benefits, most notably the matching time indices. I can then use one of the ideas for analysis for panel data analysis, although I will have to work out the variables more thoroughly.
+
+# Methods
+
+First we perform a simulation study. Two problems for survey data are notable: missingness and non-representativeness, factors which also mutually influence each other. First we generate a full population, from which we sample using stratified sampling, a common sampling technique. Stratas are mutually exclusive cohorts, such as gender, birthyear, etc. When sampling is performed properly, several techniques can be applied, which will be compared. Standard statistical techniques can be applied and will result in unbiased estimators when a few key assumptions are met:
+
+- There are no missing data
+  - Or, if there are missing data, they are Missing At Random (MAR)
+- The data for each strata are normally distributed
+  - Or, if the data are not normally distributed, sufficient samples are taken for the CLT to hold
+
+To this end, we first show that the true population parameters can be estimated using representative subsamples when these three conditions hold. Then, the conditions will be varied. The most basic statistical technique that is relevant for surveys is estimating the population mean. For the application of pseudo-panel methods this is essential, since the population mean is the most straightforward way to construct a pseudo panel.  
+
+An alternative method to construct pseudo panel data is by using regression techniques. Here, in addition to the no missing data assumption, additional assumptions apply. (TODO: need to read the papers and see what they say.)
+
+
+First, we deal with the assumption of missing data. One problem occurs when missing data are Not Missing At Random (NMAR). For example, some cohorts might be more prone to non-response for certain questions, for example questions regarding religion, political opinions when their opinions are deemed controversial, etc. Applying methods directly to these data will lead to biased estimators. One possible solution is imputation: filling the missing values using estimation procedures. Another solution is balancing: weighting the underrepresented cohorts more heavily.
+
+Another possible problem is non-normality in the data. First, the goal is to determine the effect of non-normality under different conditions: no missing data, MAR, NMAR. Additionally, the minimum sample size at which missingness is no longer a problem can be determined. 
+
+- **Problem:** Missing data are NMAR
+  - **Solutions:** 
+    - Imputation
+    - Balancing
+- **Problem:** Data are not normally distributed
+  - **Solutions:**
+    - Bootstrapping
+    - Model the population mean with techniques that are robust to non-normality (TODO: this should be possible, need to research this further)
+    
+    
 
 
 
