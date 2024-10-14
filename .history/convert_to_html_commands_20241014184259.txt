@@ -1,0 +1,2 @@
+pandoc index.md -o index.html  
+jupyter nbconvert --to html Python/.ipynb  

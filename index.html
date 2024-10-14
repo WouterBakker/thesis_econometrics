@@ -4,14 +4,15 @@ id="on-this-webpage-there-is-an-overview-of-what-ive-done-so-far-with-links-to-t
 this webpage, there is an overview of what I’ve done so far, with links
 to the corresponding Jupyter notebooks. The notebooks contain
 information on what I’ve implemented and how the code works.</h3>
+<p>14-10-2024, 18:42</p>
 <ul>
 <li>General
 <ul>
 <li>My functions are implemented in the file <a
 href="Python/class_FE_regression.py">class_FE_regression.py</a>
 <ul>
-<li>When a class or function is called in a notebook, they will be in
-this file</li>
+<li>When a class or function is called in a notebook, it will be in this
+file</li>
 </ul></li>
 </ul></li>
 </ul>
@@ -56,8 +57,9 @@ this needs to be accounted for (more details in the notebook)</li>
 </ol></li>
 </ol></li>
 </ol></li>
-<li>Inoue (2008): “efficient estimation and inference in linear
-pseudo-panel data models”
+<li><a href="Python/Inoue_replication.html">Replication of Inoue (2008):
+“efficient estimation and inference in linear pseudo-panel data
+models”</a>
 <ol type="1">
 <li>Inoue suggests a GMM estimator based on feasible GLS that is more
 efficient than the standard FE estimator for pseudo-panel models</li>
@@ -65,25 +67,34 @@ efficient than the standard FE estimator for pseudo-panel models</li>
 of <span class="math inline"><em>β</em></span> is much lower for the GMM
 estimator as compared to the FE estimator
 <ol type="1">
-<li>I tried to replicate this study, but my results are not the
-same</li>
-<li>The RMSE is very similar to FE OLS, even slightly worse</li>
-<li>Two things need attention:
-<ol type="1">
+<li>My RMSE is indeed significantly lower, but the results are not the
+same as in Inoue, and I’m unsure why</li>
 <li>Need to verify whether my <strong>simulation parameters</strong> are
 indeed the same as Inoue’s
 <ol type="1">
 <li>It might be that I’m simulating the data incorrectly.</li>
 </ol></li>
-<li>Construction of the <strong>weighting matrix</strong>
+</ol></li>
+</ol></li>
+<li>European Social Survey (ESS) analysis (in progress, need to collect
+my code in notebooks)
 <ol type="1">
-<li>When weighting matrix is set to identity the results are equal to
-OLS</li>
-<li>When weighting matrix is as specified in Inoue it performs the same
-as a random weighting matrix</li>
+<li>The European Social Survey (ESS) is a cross-national survey
+conducted biennially across Europe, collecting data on social,
+political, and behavioral attitudes and values. It aims to track
+long-term changes and differences across countries, providing insights
+for social science research and informing policy decisions.</li>
+<li>Good candidate for an analysis, since the documentation is very
+good.</li>
+<li>The aim (currently) is to provide methodological guidelines on how
+one might approach the analysis of survey data using the proposed
+pseudo-panel model.
+<ul>
+<li>Constructing the cohorts based on post-stratification</li>
+<li>Applying the weights correctly</li>
+<li>Informed choice for imputation techniques when data are Missing at
+Random (as opposed to Missing Completely at Random, which is
+ignoreable)</li>
+</ul></li>
 </ol></li>
-</ol></li>
-</ol></li>
-</ol></li>
-<li>ESS analysis</li>
 </ol>
