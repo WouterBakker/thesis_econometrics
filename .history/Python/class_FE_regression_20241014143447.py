@@ -5,13 +5,22 @@ import numpy as np
 import timeit as timeit
 import scipy.stats
 
+# "A dataset is only as valuable as the quality of the methods that we use to analyse it"
 
 # Commented out code
 # np.set_printoptions(linewidth=250)  # Increase the line width
 
+#### Superclass
 
 
-## Classes
+# class SimulateFit:
+#     def __init__(self, N, T, beta, var_cov_matrix, reps, method = "OLS"):
+        
+#         self.method = method
+#         self.sim = panel_simulation(N, T, beta, var_cov_matrix, reps)
+#         self.sim.simulate_Y()
+#         self.est = panel_estimation(self.sim.X, self.sim.Y, N, T, method = "OLS", FE = True)
+#         self.est.estimate_coefs()
 
 
 ### Simulate specified panel model
@@ -35,12 +44,16 @@ class panel_simulation:
         # 
         self.theta = np.random.uniform(min, max, (self.reps, self.N, 1))
         
- 
+        #OLD: problem: fixed effects need to be added to X for the M matrix multiplications to work
+        # fixed_effects = np.random.uniform(min, max, self.N)
+        # self.theta = np.kron(fixed_effects, np.ones([self.reps, self.T, 1])).transpose((0, 2, 1))
+            
     def generate_X(self, mean = 0, sd = 1):
         # Generate X values
         ## Reps*N*T*K (they are independent draws, so can draw them all at once)
         # self.X = np.random.uniform(0, 5, [self.reps, self.N, self.T, self.K])
         self.X = np.random.multivariate_normal([mean]*self.K, np.eye(self.K)*sd, [self.reps, self.N, self.T])
+        
 
 
     def generate_covar_matrix(self, min_var, max_var, shrink_factor = 0):
@@ -63,6 +76,7 @@ class panel_simulation:
 
     def generate_errors(self):
         # Generate Reps*NT errors with mean 0
+        # self.errors = np.random.multivariate_normal(np.zeros(self.N), self.var_cov_matrix, self.T*self.reps).reshape((self.reps, self.N*self.T), order = 'F')
         self.errors = np.random.multivariate_normal(np.zeros(self.N), self.covar_matrix, (self.reps, self.T)).transpose((0, 2, 1))
 
     def simulate_Y(self):
@@ -73,16 +87,16 @@ class panel_simulation:
         # RepsNT matrix of X
         self.generate_X()
         
-        self.Y = self.theta + self.X @ self.beta + self.errors
-        
+        self.X_observed = self.X + self.theta.reshape((self.reps, self.N, 1, 1))
         # theta and X go together, since real data would have theta included in the observations
-        self.X_observed = self.X + self.theta.reshape((self.reps, self.N, 1, 1)) # use np broadcasting over X by reshaping last two axes of theta to 1
+        self.Y = self.theta + self.X @ self.beta + self.errors
         
         return self
 
-### Estimate coefficients, calculate t-values & rejection rates for data simulated with panel_simulation class
+
 
 class panel_estimation():
+
 
     def __init__(self, X, Y, N, T, method = "OLS", FE = True):
         self.X = X
@@ -159,7 +173,9 @@ class panel_estimation():
         '''
         Performs regular OLS estimation on ALL repetitions present in X (first dimension of X, or Y)
         So: does NOT include demeaning transformation
-
+        ## Old implementation: Looping through N to estimate beta is slower by factor of 1.9
+        ## This scales with reps: reps*1.9 slower
+        
         large_Q and small_q correspond to the Q and q matrix in equation 26.13, 26.21 (Pesaran, p. 640)
         '''
 
@@ -189,6 +205,7 @@ class panel_estimation():
             # Tensor implementation of Type I errors
             ## First calculates the t-values for all the coefficients
             ## Then calculates whether the coefficient rejects H0 of beta=0
+            ## Since true beta equals 0, it should not reject H0, hence computing the type I errors
             ### Based on Pesaran p.642,643
 
             # Compute residuals
@@ -196,7 +213,6 @@ class panel_estimation():
             self.residuals = resids_all
             
             # Compute variance for each N
-            ## Need to adjust for weighted version since T is not equal for all N
             if self.method == "weighted_FE_OLS":
                 # Need to adjust T for proper variance calculation
                 ## Since T is no longer the same when observations are randomly missing
@@ -211,7 +227,7 @@ class panel_estimation():
 
 
             # Construct Gamma matrices, RepsxNxTxT
-            ## Each TxT matrix has the corresponding variance on the diagonal
+            ## Each TxT matdrix has the corresponding variance on the diagonal
             identity_matrices = np.tile(np.eye(self.T), (self.reps, self.N, 1, 1))
             Gamma = identity_matrices * variances_all[:, :, np.newaxis, np.newaxis]
 
@@ -247,6 +263,8 @@ class panel_estimation():
 
             self.proportion_H0_rejected = np.array(nr_of_rejections_beta) / self.reps
 
+
+
     @staticmethod
     def demean(T):
         M_T = np.eye(T) - (1/T) * np.ones((T, T))
@@ -254,7 +272,7 @@ class panel_estimation():
     
     
 
-# Implementation of the simulation study of Inoue (2008), slow (unoptimized)
+# Implementation of the simulation study of Inoue (2008), slow
 class GMM_replication():
 
     def simulate(self, S, T, N_bar, var_ds, var_xst, var_zi, var_vzst):

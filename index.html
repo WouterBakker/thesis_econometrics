@@ -1,6 +1,89 @@
-<h1 id="notebook-links">Notebook Links</h1>
+<h1 id="thesis-progress">Thesis progress</h1>
+<h3
+id="on-this-webpage-there-is-an-overview-of-what-ive-done-so-far-with-links-to-the-corresponding-jupyter-notebooks.-the-notebooks-contain-information-on-what-ive-implemented-and-how-the-code-works.">On
+this webpage, there is an overview of what I’ve done so far, with links
+to the corresponding Jupyter notebooks. The notebooks contain
+information on what I’ve implemented and how the code works.</h3>
 <ul>
-<li><a href="ESS_analysis.html">Analysis Notebook</a></li>
-<li><a href="data-exploration.html">Data Exploration Notebook</a></li>
-<li><a href="model-training.html">Model Training Notebook</a></li>
+<li>General
+<ul>
+<li>My functions are implemented in the file <a
+href="Python/class_FE_regression.py">class_FE_regression.py</a>
+<ul>
+<li>When a class or function is called in a notebook, they will be in
+this file</li>
+</ul></li>
+</ul></li>
 </ul>
+<ol type="1">
+<li><a href="Python/FE_OLS_hypothesis_testing.ipynb">Simulation study:
+Fixed Effects regression</a>
+<ol type="1">
+<li>Implemented so far: simulation, estimation, t-values, type I
+errors</li>
+<li>Two models are compared in the notebook:
+<ol type="1">
+<li>Regular FE model
+<ol type="1">
+<li>Regular FE model estimated using the within (demeaning)
+transformation</li>
+</ol></li>
+<li>Weighted FE model
+<ol type="1">
+<li>Accounts for missing values in X</li>
+<li>Missing values occur for two reasons in pseudo-panel models:
+<ol type="1">
+<li>General missingness: no observations for a time-period since survey
+wasn’t taken in that year for specific countries</li>
+<li>Cohort missingness: some cohorts were not observed</li>
+<li>Item missingness: a respondent declined to answer a specific
+question</li>
+</ol></li>
+<li>Procedure
+<ol type="1">
+<li>Sets some observations to zero (to simulate missingness)</li>
+<li>Constructs a weighting matrix based these missing values so they are
+omitted in estimation (0-values don’t affect sum of squares)</li>
+<li>Corrects the variance calculation used to construct the covariance
+matrix
+<ol type="1">
+<li>One of the steps is to calculate the variance for each
+cross-sectional unit</li>
+<li>Normally we can divide by T, but since T is different for each unit
+this needs to be accounted for (more details in the notebook)</li>
+</ol></li>
+</ol></li>
+</ol></li>
+</ol></li>
+</ol></li>
+<li>Inoue (2008): “efficient estimation and inference in linear
+pseudo-panel data models”
+<ol type="1">
+<li>Inoue suggests a GMM estimator based on feasible GLS that is more
+efficient than the standard FE estimator for pseudo-panel models</li>
+<li>He performs a Monte Carlo simulation study and finds that the RMSE
+of <span class="math inline"><em>β</em></span> is much lower for the GMM
+estimator as compared to the FE estimator
+<ol type="1">
+<li>I tried to replicate this study, but my results are not the
+same</li>
+<li>The RMSE is very similar to FE OLS, even slightly worse</li>
+<li>Two things need attention:
+<ol type="1">
+<li>Need to verify whether my <strong>simulation parameters</strong> are
+indeed the same as Inoue’s
+<ol type="1">
+<li>It might be that I’m simulating the data incorrectly.</li>
+</ol></li>
+<li>Construction of the <strong>weighting matrix</strong>
+<ol type="1">
+<li>When weighting matrix is set to identity the results are equal to
+OLS</li>
+<li>When weighting matrix is as specified in Inoue it performs the same
+as a random weighting matrix</li>
+</ol></li>
+</ol></li>
+</ol></li>
+</ol></li>
+<li>ESS analysis</li>
+</ol>

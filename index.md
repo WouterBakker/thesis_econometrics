@@ -1,6 +1,36 @@
-# Notebook Links
+# Thesis progress
+### On this webpage, there is an overview of what I've done so far, with links to the corresponding Jupyter notebooks. The notebooks contain information on what I've implemented and how the code works.
 
-- [Analysis Notebook](ESS_analysis.html)
-- [Data Exploration Notebook](data-exploration.html)
-- [Model Training Notebook](model-training.html)
+- General
+	- My functions are implemented in the file [class_FE_regression.py](Python/class_FE_regression.py)
+		- When a class or function is called in a notebook, they will be in this file
 
+1. [Simulation study: Fixed Effects regression](Python/FE_OLS_hypothesis_testing.ipynb)
+	1. Implemented so far: simulation, estimation, t-values, type I errors
+	2. Two models are compared in the notebook:
+		1. Regular FE model
+			1. Regular FE model estimated using the within (demeaning) transformation
+		2. Weighted FE model
+			1. Accounts for missing values in X
+			2. Missing values occur for two reasons in pseudo-panel models:
+				1. General missingness: no observations for a time-period since survey wasn't taken in that year for specific countries
+				2. Cohort missingness: some cohorts were not observed
+				3. Item missingness: a respondent declined to answer a specific question
+			3. Procedure
+				1. Sets some observations to zero (to simulate missingness)
+				2. Constructs a weighting matrix based these missing values so they are omitted in estimation (0-values don't affect sum of squares)
+				3. Corrects the variance calculation used to construct the covariance matrix
+					1. One of the steps is to calculate the variance for each cross-sectional unit
+					2. Normally we can divide by T, but since T is different for each unit this needs to be accounted for (more details in the notebook)
+2. Inoue (2008): "efficient estimation and inference in linear pseudo-panel data models"
+	1. Inoue suggests a GMM estimator based on feasible GLS that is more efficient than the standard FE estimator for pseudo-panel models
+	2. He performs a Monte Carlo simulation study and finds that the RMSE of $\beta$ is much lower for the GMM estimator as compared to the FE estimator
+		1. I tried to replicate this study, but my results are not the same
+		3. The RMSE is very similar to FE OLS, even slightly worse
+		4. Two things need attention:
+			1. Need to verify whether my **simulation parameters** are indeed the same as Inoue's
+				1. It might be that I'm simulating the data incorrectly.
+			2. Construction of the **weighting matrix**
+				1. When weighting matrix is set to identity the results are equal to OLS
+				2. When weighting matrix is as specified in Inoue it performs the same as a random weighting matrix
+3. ESS analysis
