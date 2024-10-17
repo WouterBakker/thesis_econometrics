@@ -4,7 +4,7 @@ id="on-this-webpage-there-is-an-overview-of-what-ive-done-so-far-with-links-to-t
 this webpage, there is an overview of what I’ve done so far, with links
 to the corresponding Jupyter notebooks. The notebooks contain
 information on what I’ve implemented and how the code works.</h3>
-<p>14-10-2024, 18:42</p>
+<p>17-10-2024, 13:17</p>
 <ul>
 <li>General
 <ul>
@@ -60,6 +60,11 @@ this needs to be accounted for (more details in the notebook)</li>
 <li><a href="Python/Inoue_replication.html">Replication of Inoue (2008):
 “efficient estimation and inference in linear pseudo-panel data
 models”</a>
+<ul>
+<li>Pdf: <a href="Papers/Inoue_efficient_estimation.pdf">Inoue (2008):
+“efficient estimation and inference in linear pseudo-panel data
+models”</a></li>
+</ul>
 <ol type="1">
 <li>Inoue suggests a GMM estimator based on feasible GLS that is more
 efficient than the standard FE estimator for pseudo-panel models</li>
@@ -76,8 +81,8 @@ indeed the same as Inoue’s
 </ol></li>
 </ol></li>
 </ol></li>
-<li>European Social Survey (ESS) analysis (in progress, need to collect
-my code in notebooks)
+<li><a href="Python/ESS_pseudo_panel_analysis.html">European Social
+Survey (ESS) analysis</a>
 <ol type="1">
 <li>The European Social Survey (ESS) is a cross-national survey
 conducted biennially across Europe, collecting data on social,
@@ -90,11 +95,25 @@ good.</li>
 one might approach the analysis of survey data using the proposed
 pseudo-panel model.
 <ul>
-<li>Constructing the cohorts based on post-stratification</li>
+<li>Constructing the cohorts based on post-stratification
+<ul>
+<li>Need to consider the instrumental variabel interpretation of cohort
+formation:
+<ul>
+<li>Exogeneity and relevance conditions</li>
+</ul></li>
+</ul></li>
 <li>Applying the weights correctly</li>
 <li>Informed choice for imputation techniques when data are Missing at
 Random (as opposed to Missing Completely at Random, which is
 ignoreable)</li>
+</ul></li>
+<li><a href="Python/ESS_bar_charts.htmlESS_bar_charts">Distribution of
+variables</a>
+<ul>
+<li>Most questions in the survey are scored on a 10-point scale. For
+certain variables of interest, I plot their distribution and show item
+missingness.</li>
 </ul></li>
 </ol></li>
 </ol>
